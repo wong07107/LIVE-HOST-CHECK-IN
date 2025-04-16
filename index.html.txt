@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Host Check-In</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        #confirmation { margin-top: 20px; padding: 10px; background: #e8f5e9; border-radius: 4px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>🎤 Host Check-In</h1>
+    <form>
+        <div class="form-group">
+            <label>Your Name:</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label>Event / Show:</label>
+            <input type="text" id="event" required>
+        </div>
+        <button type="button" onclick="checkIn()">✅ Check In</button>
+    </form>
+    <div id="confirmation"></div>
+
+    <script>
+        function checkIn() {
+            const name = document.getElementById("name").value;
+            const event = document.getElementById("event").value;
+            const time = new Date().toLocaleString();
+
+            document.getElementById("confirmation").innerHTML = `
+                <strong>✅ Checked In!</strong><br>
+                <strong>Name:</strong> ${name}<br>
+                <strong>Event:</strong> ${event}<br>
+                <strong>Time:</strong> ${time}
+            `;
+            document.getElementById("confirmation").style.display = "block";
+
+            // Send data to Google Sheets
+            const scriptURL = "https://script.google.com/macros/s/AKfycbxMorCm53Jh-jJ_kjYt5XwQ3isFWrsqk748vWCRHQjTmRgFbPbYETs8u4bAFiEWwK0m/exec";
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ name, event, time }),
+            }).catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
